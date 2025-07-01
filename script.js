@@ -71,11 +71,9 @@ function renderAddPlayer() {
   content.innerHTML = `
     <h2>Añadir jugador</h2>
     <form id="formAddPlayer">
-      <label for="playerName">Nombre:</label>
-      <input type="text" id="playerName" required />
+      <input type="text" id="playerName" placeholder="Nombre" required />
 
-      <label for="playerNumber">Número:</label>
-      <input type="number" id="playerNumber" min="0" required />
+      <input type="number" id="playerNumber" min="0" placeholder="Número" required />
 
       <label for="playerPosition">Posición:</label>
       <select id="playerPosition" required>
@@ -155,6 +153,7 @@ function renderPlayerStats() {
 
   function updateStats() {
     const playerId = selectPlayer.value;
+    const player = players.find((p) => p.id === playerId);
     const matches = getMatches().filter((m) => m.playerId === playerId);
 
     const matchesPlayed = matches.length;
@@ -163,22 +162,23 @@ function renderPlayerStats() {
     const minutes = matches.reduce((a, m) => a + m.minutes, 0);
     const yellowCards = matches.reduce((a, m) => a + m.yellowCards, 0);
     const redCards = matches.reduce((a, m) => a + m.redCards, 0);
-    const percentageMinutes =
+
+    const avgGoals =
+      matchesPlayed > 0 ? (goals / matchesPlayed).toFixed(2) : "0.00";
+    const avgAssists =
+      matchesPlayed > 0 ? (assists / matchesPlayed).toFixed(2) : "0.00";
+    const minutesPercentage =
       matchesPlayed > 0
         ? ((minutes / (matchesPlayed * 80)) * 100).toFixed(2)
         : "0.00";
 
     statsResult.innerHTML = `
-      <table>
-        <tbody>
-          <tr><td>Partidos Jugados</td><td>${matchesPlayed}</td></tr>
-          <tr><td>Goles</td><td>${goals}</td></tr>
-          <tr><td>Asistencias</td><td>${assists}</td></tr>
-          <tr><td>Minutos</td><td>${minutes}</td></tr>
-          <tr><td>% Minutos</td><td>${percentageMinutes}%</td></tr>
-          <tr><td>Tarjetas amarillas</td><td>${yellowCards}</td></tr>
-          <tr><td>Tarjetas rojas</td><td>${redCards}</td></tr>
-        </tbody>
+      <table class="player-stats">
+        <tr><th>Partidos:</th><td>${matchesPlayed}</td></tr>
+        <tr><th>Goles:</th><td>${goals} (${avgGoals} por partido)</td></tr>
+        <tr><th>Asistencias:</th><td>${assists} (${avgAssists} por partido)</td></tr>
+        <tr><th>Minutos:</th><td>${minutes} (${minutesPercentage}% de disponibilidad)</td></tr>
+        <tr><th>Tarjetas:</th><td>🟨 ${yellowCards} / 🟥 ${redCards}</td></tr>
       </table>
     `;
     msgDelete.textContent = "";
@@ -194,6 +194,7 @@ function renderPlayerStats() {
         `¿Estás seguro de que quieres eliminar a ${playerName}? Esta acción eliminará también todos sus partidos.`
       )
     ) {
+      // Eliminar jugador y sus partidos
       let updatedPlayers = getPlayers().filter((p) => p.id !== playerId);
       savePlayers(updatedPlayers);
 
@@ -203,6 +204,7 @@ function renderPlayerStats() {
       msgDelete.style.color = "green";
       msgDelete.textContent = `Jugador ${playerName} y sus partidos eliminados correctamente.`;
 
+      // Volver a renderizar la vista para actualizar lista y stats
       renderPlayerStats();
     }
   });
@@ -238,7 +240,7 @@ function renderAddMatch() {
       <label for="matchAssists">Asistencias:</label>
       <input type="number" id="matchAssists" min="0" value="0" required />
 
-      <label for="matchMinutes">Minutos (0-80):</label>
+      <label for="matchMinutes">Minutos:</label>
       <input type="number" id="matchMinutes" min="0" max="80" value="0" required />
 
       <label for="matchYellowCards">Tarjetas amarillas:</label>

@@ -70,17 +70,35 @@ label {
   text-align: left;
 }
 
+/* Estilo de inputs para modo claro (por defecto) */
 input[type="text"],
 input[type="number"],
 select {
-  width: 100%;
+  background-color: #ffffff; /* Fondo claro */
+  color: #333; /* Texto oscuro */
+  border: 1px solid #ccc; /* Borde claro */
   padding: 8px;
-  margin-bottom: 15px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  width: 100%;
+  margin-bottom: 15px;
   box-sizing: border-box;
   font-size: 1rem;
 }
+
+/* Estilo de inputs en modo oscuro */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="number"],
+body.dark-mode select {
+  background-color: #333; /* Fondo oscuro */
+  color: #f0f0f0; /* Texto claro */
+  border: 1px solid #555; /* Borde más oscuro */
+}
+
+/* Placeholder en modo oscuro */
+body.dark-mode input::placeholder {
+  color: #aaa; /* Placeholder tenue */
+}
+
 
 button[type="submit"] {
   background-color: #4a90e2;
@@ -119,6 +137,21 @@ th {
 td {
   text-align: right;
 }
+
+/* Estilo para la primera columna de las tablas */
+.player-stats th, 
+.player-stats td:first-child {
+  background-color: #f0f0f0; /* Claro por defecto */
+  color: #333; /* Texto oscuro */
+}
+
+/* Modo oscuro: Ajustes para la primera columna */
+body.dark-mode .player-stats th, 
+body.dark-mode .player-stats td:first-child {
+  background-color: #333; /* Fondo oscuro */
+  color: #f0f0f0; /* Texto claro */
+}
+
 
 /* Botón de cambio de tema */
 .theme-button {
