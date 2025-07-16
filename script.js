@@ -79,8 +79,8 @@ function renderAddPlayer() {
       <select id="playerPosition" required>
         <option value="Portero">Portero</option>
         <option value="Defensa">Defensa</option>
-        <option value="Medio">Medio</option>
-        <option value="Ataque">Ataque</option>
+        <option value="Medio">Mediocentro</option>
+        <option value="Ataque">Delantero</option>
       </select>
 
       <button type="submit">Añadir jugador</button>
@@ -172,12 +172,19 @@ function renderPlayerStats() {
         ? ((minutes / (matchesPlayed * 80)) * 100).toFixed(2)
         : "0.00";
 
+    const totalParticipaciones = goals + assists;
+
+    const gaPerMinute = totalParticipaciones > 0
+      ? `${(minutes / totalParticipaciones).toFixed(2)} minutos por G+A`
+      : "Sin participación ofensiva";
+
     statsResult.innerHTML = `
       <table class="player-stats">
         <tr><th>Partidos:</th><td>${matchesPlayed}</td></tr>
         <tr><th>Goles:</th><td>${goals} (${avgGoals} por partido)</td></tr>
         <tr><th>Asistencias:</th><td>${assists} (${avgAssists} por partido)</td></tr>
         <tr><th>Minutos:</th><td>${minutes} (${minutesPercentage}% de disponibilidad)</td></tr>
+        <tr><th>Minutos por participación ofensiva:</th><td>${gaPerMinute}</td></tr>
         <tr><th>Tarjetas:</th><td>🟨 ${yellowCards} / 🟥 ${redCards}</td></tr>
       </table>
     `;
@@ -194,7 +201,6 @@ function renderPlayerStats() {
         `¿Estás seguro de que quieres eliminar a ${playerName}? Esta acción eliminará también todos sus partidos.`
       )
     ) {
-      // Eliminar jugador y sus partidos
       let updatedPlayers = getPlayers().filter((p) => p.id !== playerId);
       savePlayers(updatedPlayers);
 
@@ -204,7 +210,6 @@ function renderPlayerStats() {
       msgDelete.style.color = "green";
       msgDelete.textContent = `Jugador ${playerName} y sus partidos eliminados correctamente.`;
 
-      // Volver a renderizar la vista para actualizar lista y stats
       renderPlayerStats();
     }
   });
